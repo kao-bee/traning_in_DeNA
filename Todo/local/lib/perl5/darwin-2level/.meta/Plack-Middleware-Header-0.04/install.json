@@ -1,0 +1,1 @@
+{"pathname":"C/CH/CHIBA/Plack-Middleware-Header-0.04.tar.gz","target":"Plack::Middleware::Header","name":"Plack::Middleware::Header","version":"0.04","provides":{"Plack::Middleware::Header":{"version":"0.04","file":"lib/Plack/Middleware/Header.pm"}},"dist":"Plack-Middleware-Header-0.04"}

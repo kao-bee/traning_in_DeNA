@@ -1,0 +1,183 @@
+: cascade base
+: around content -> {
+<div id="input-success" class="alert alert-success fade in" style="display:none;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Success!!</strong> Your submit is success.
+</div>
+<div id="input-validate" class="alert alert-danger fade in" style="display:none;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    Text needs. Please check and try again.
+</div>
+<form id="input-form" role="form">
+    <div class="form-group" id="main-textarea">
+        <textarea class="form-control" rows="5"></textarea>
+    </div>
+    <div class="form-group">
+        <span id="num-count">0</span>
+    </div>
+    <button id="submit-btn" type="submit" class="btn btn-primary">Submit</button>
+</from>
+
+: for $todos -> $todo {
+<hr />
+<pre class="prettyprint linenums:1">
+<: $todo.text :>
+</pre>
+<p><: $todo.created_at :></p>
+: }
+ 
+
+<script>
+$(function(){
+    $("#main-textarea textarea").bind("change keyup", function(){
+        var count = $(this).val().length;
+        $("#num-count").text(count);
+    });
+
+    $('#input-form').submit(function(event) {
+        // HTMLでの送信をキャンセル
+        event.preventDefault();
+
+        // 操作対象のフォーム要素を取得
+        var $form = $(this);
+
+        // 送信ボタンを取得
+        var $button = $form.find('#submit-btn');
+
+        // 送信
+        $.ajax({
+            url: "<: $c.req.uri_for('/add') :>",
+            type: 'POST',
+            data: {text: $form.find('#main-textarea textarea').val()},
+            timeout: 10000,  // 単位はミリ秒
+
+            // 送信前
+            beforeSend: function(xhr, settings) {
+                // ボタンを無効化し、二重送信を防止
+                $button.attr('disabled', true);
+                $('#input-validate').hide();
+                $form.find("#main-textarea").removeClass('has-error');
+            },
+            // 応答後
+            complete: function(xhr, textStatus) {
+                // ボタンを有効化し、再送信を許可
+                $button.attr('disabled', false);
+            },
+
+            // 通信成功時の処理
+            success: function(result, textStatus, xhr) {
+                if (result["response"]) {
+                    $form[0].reset();
+                    $("#num-count").text(0);
+                    $('#input-success').fadeIn();
+                }
+                else {
+                    $('#input-validate').fadeIn();
+                    $form.find("#main-textarea").addClass('has-error');
+                }
+            },
+
+            // 通信失敗時の処理
+            error: function(xhr, textStatus, error) {
+                alert('Connection refuse.');
+            }
+        });
+    });
+    $('.delete').click(function() {
+        // 削除の確認ダイアログを表示
+        if (!window.confirm('削除しますか？')) return false;
+        var $root = $(this).closest('li');
+        var todoId = $.trim($root.data('todoId'));
+        var isNum = todoId.match(/^[0-9]+$/);
+        // 取得したidが数値でなければリターン
+        if (!isNum) return false;
+        $.ajax({
+            url: "<: $c.req.uri_for('/delete') :>",
+            type: 'POST',
+            data: {id: todoId},
+            timeout: 10000,  // 単位はミリ秒
+
+            // 送信前
+            // beforeSend: function(xhr, settings) {
+            //     // ボタンを無効化し、二重送信を防止
+            //     $button.attr('disabled', true);
+            //     $('#input-validate').hide();
+            //     $form.find("#main-textarea").removeClass('has-error');
+            // },
+            // 応答後
+            complete: function(xhr, textStatus) {
+                // ボタンを有効化し、再送信を許可
+                //$button.attr('disabled', false);
+            },
+
+            // 通信成功時の処理
+            success: function(result, textStatus, xhr) {
+                if (result["response"]) {
+                    $root.fadeOut();
+                }
+                else {
+                    alert("DBでエラーが発生しました。");
+                }
+            },
+
+            // 通信失敗時の処理
+            error: function(xhr, textStatus, error) {
+                alert('Connection refuse.');
+            }
+        });
+
+    });
+    $('.save').click(function() {
+        // 削除の確認ダイアログを表示
+        if (!window.confirm('更新しますか？')) return false;
+        var $root = $(this).closest('li');
+        var todoId = $.trim($root.data('todoId'));
+        var isNum = todoId.match(/^[0-9]+$/);
+        // 取得したidが数値でなければリターン
+        if (!isNum) return false;
+        var $textArea = $root.find('');
+        var $dueArea  = $root.find('');
+
+        var text = $textArea.val();
+        var due  = $dueArea.val();
+        $.ajax({
+            url: "<: $c.req.uri_for('/update') :>",
+            type: 'POST',
+            data: {id: todoId, text: text, due: due},
+            timeout: 10000,  // 単位はミリ秒
+
+            // 送信前
+            // beforeSend: function(xhr, settings) {
+            //     // ボタンを無効化し、二重送信を防止
+            //     $button.attr('disabled', true);
+            //     $('#input-validate').hide();
+            //     $form.find("#main-textarea").removeClass('has-error');
+            // },
+            // 応答後
+            complete: function(xhr, textStatus) {
+                // ボタンを有効化し、再送信を許可
+                //$button.attr('disabled', false);
+            },
+
+            // 通信成功時の処理
+            success: function(result, textStatus, xhr) {
+                var res = result["response"]
+                if (res) {
+                    
+                }
+                else {
+                    alert("DBでエラーが発生しました。");
+                }
+            },
+
+            // 通信失敗時の処理
+            error: function(xhr, textStatus, error) {
+                alert('Connection refuse.');
+            }
+        });
+
+    });
+});
+</script>
+: }
+

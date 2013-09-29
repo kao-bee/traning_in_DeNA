@@ -1,0 +1,1 @@
+{"version":"0.28","name":"Task::Plack","target":"Task::Plack","pathname":"M/MI/MIYAGAWA/Task-Plack-0.28.tar.gz","dist":"Task-Plack-0.28","provides":{"Task::Plack":{"version":"0.28","file":"lib/Task/Plack.pm"}}}

@@ -1,0 +1,33 @@
+body {
+    padding-top: 70px;
+}
+
+.container {
+    margin: 0 5px;
+}
+
+.mgr5 {
+    margin-right: 5px;
+}
+
+.mgl5 {
+    margin-left: 5px;
+}
+
+#num-count {
+    float: right;
+    font-weight: bold;
+    margin: 0 5px 10px;
+}
+
+/* css for mobile */
+@media(max-width:768px) {
+    .btn {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .container {
+        padding-bottom: 20px;
+    }
+}

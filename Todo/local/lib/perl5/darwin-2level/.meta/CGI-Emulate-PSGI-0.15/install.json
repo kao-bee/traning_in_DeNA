@@ -1,0 +1,1 @@
+{"provides":{"CGI::Emulate::PSGI":{"file":"lib/CGI/Emulate/PSGI.pm","version":"0.15"},"CGI::Parse::PSGI":{"file":"lib/CGI/Parse/PSGI.pm"}},"dist":"CGI-Emulate-PSGI-0.15","pathname":"M/MI/MIYAGAWA/CGI-Emulate-PSGI-0.15.tar.gz","target":"CGI::Emulate::PSGI","name":"CGI::Emulate::PSGI","version":"0.15"}

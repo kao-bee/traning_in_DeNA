@@ -1,0 +1,10 @@
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Middleware/Session.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Middleware/Session/Cookie.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session/State.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session/State/Cookie.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session/Store.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session/Store/Cache.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session/Store/DBI.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session/Store/File.pm
+/Users/kaoru/Sites/traning_in_DeNA/Todo/local/lib/perl5/Plack/Session/Store/Null.pm
