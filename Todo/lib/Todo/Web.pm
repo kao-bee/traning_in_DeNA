@@ -29,7 +29,21 @@ get '/' => [qw/set_title/] => sub {
 
 post '/add' => sub{
     my ($self, $c) = @_;
-    my $row = $self->create_todo($c->req->param('text'), $c->req->param('due') );
+    my $result = $c->req->validator([
+        'text' => {
+            default => 'hogehoge',
+            rule => [
+                ['NOT_NULL', 'empty text'],
+            ],
+        },
+        'due_at' => {
+            default => '1111-11-11 11:11:11', # ←なくてもok
+            rule => [
+                ['NOT_NULL', 'empty due'],
+            ],
+        }
+    ]);
+    my $row = $self->create_todo(map {$result->valid($_)} qw/text due_at/ );
     $c->render_json({response => $row});
 };
 
@@ -46,9 +60,23 @@ post '/delete' => sub {
 
 # update method
 post '/update' => sub {
-	my ($self, $c) = @_;
-    my $todo = $self->update_todo($c->req->param('id'),$c->req->param('text'),$c->req->param('due'),$c->req->param('done'));
-	$c->render_json({response => 'true'});
+    my ($self, $c) = @_;
+    my $result = $c->req->validator([
+        'text' => {
+            default => 'hogehoge',
+            rule => [
+                ['NOT_NULL', 'empty text'],
+            ],
+        },
+        'due_at' => {
+            default => '1111-11-11 11:11:11', # ←なくてもok
+            rule => [
+                ['NOT_NULL', 'empty due'],
+            ],
+        }
+    ]);
+    my $todo = $self->update_todo($c->req->param('id'),$result->valid('text'), $result->valid('due_at'),$c->req->param('done'));
+    $c->render_json({response => 'true'});
 };
 
 
@@ -83,7 +111,6 @@ sub create_todo {
 
 sub update_todo {
     my ($self, $id, $text, $due_at, $done) = @_;
-    $text = '' if !defined $text;
     my $db = $self->db;
     my $update_row_count = $db->update('todos',
 				   {
@@ -116,8 +143,8 @@ sub now_datetime {
 
 sub create_datetime {
     my ($self, $string_time) = @_;
-    if($string_time){
-	$string_time = '2013-09-23 12:12:12';
+    if(!$string_time){
+	$string_time = '2000-10-22 22:22:22';
     }
 
     my $strp = DateTime::Format::Strptime->new(

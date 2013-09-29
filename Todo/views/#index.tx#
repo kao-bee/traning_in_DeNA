@@ -22,11 +22,11 @@
 <hr />
 <pre class="prettyprint linenums:1">
 <: $todo.text :>
+<button id=" type="button" class="close" data-dismiss="alert" aria-hidden="true">
 </pre>
-<p><: $entry.created_at :> by <: $entry.nickname :></p>
+<p><: $todo.created_at :></p>
 : }
  
-: }
 
 <script>
 $(function(){
