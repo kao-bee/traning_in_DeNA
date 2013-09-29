@@ -1,7 +1,7 @@
 CREATE TABLE todos(
        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
        text TEXT,
-       due_at DATETIME,
+       due_at DATETIME NOT NULL,
        done TINYINT(1) NOT NULL DEFAULT 0,
        created_at DATETIME NOT NULL,
        updated_at DATETIME NOT NULL,

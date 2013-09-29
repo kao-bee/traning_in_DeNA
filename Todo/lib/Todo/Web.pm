@@ -23,7 +23,7 @@ filter 'set_title' => sub {
 
 get '/' => [qw/set_title/] => sub {
     my ( $self, $c )  = @_;
-    my @todos = $self->db->search( 'todos', {}, {order_by => 'id DESC'});
+    my @todos = $self->db->search( 'todos', {}, {order_by => 'due_at ASC'});
     $c->render('index.tx', { todos => \@todos } );
 };
 
