@@ -11,6 +11,8 @@ use FindBin;
 use lib "$FindBin::Bin/../../lib";
 use DateTime;
 use Config::Simple;
+use Net::Twitter;
+use feature 'state';
 
 filter 'set_title' => sub {
     my $app = shift;
@@ -24,6 +26,7 @@ filter 'set_title' => sub {
 get '/' => [qw/set_title/] => sub {
     my ( $self, $c )  = @_;
     my @todos = $self->db->search( 'todos', {}, {order_by => 'due_at ASC'});
+    $self->tweet_overdue( @todos );
     $c->render('index.tx', { todos => \@todos } );
 };
 
@@ -43,6 +46,7 @@ post '/add' => sub{
             ],
         }
     ]);
+    #$self->tw->update({status => 'create'});
     my $row = $self->create_todo(map {$result->valid($_)} qw/text due_at/ );
     $c->render_json({response => $row});
 };
@@ -95,6 +99,19 @@ sub db {
 	$self->{_db};
 }
 
+sub tw {
+    my $self = shift;
+    if( !defined( $self->{_tw}) ) {
+	$self->{_tw} = Net::Twitter->new({
+	    traits => [qw/ OAuth API::RESTv1_1 /],
+	    consumer_key => 'bx0jNOMTDEOewlyoYkzBWA',
+	    consumer_secret => 'RitrZa5vf6EHGpLTiMeuQIjG2Em0lLusEqgx2C8pY',
+	    access_token => '1918880365-JnsyypcSFBGFY7INS3ZQF3xbhizWsswHB2nZdqu',
+	    access_token_secret => 'zM96nOGJ3jI6F0mE6TOFamP1SB8XDlNZRfzEknKp4'});
+    }
+    $self->{_tw};
+}
+
 sub create_todo {
     my ($self, $text, $due) = @_;
     $text = "" if !defined $text;
@@ -107,7 +124,6 @@ sub create_todo {
     });
     \%{$row->get_columns};
 }
-
 
 sub update_todo {
     my ($self, $id, $text, $due_at, $done) = @_;
@@ -151,6 +167,19 @@ sub create_datetime {
 	pattern => '%Y-%m-%d %H:%M:%S' # 文字列のパターンを指定
     );
     $strp->parse_datetime($string_time);
+}
+
+sub tweet_overdue {
+    my $self = shift;
+    my $now = $self->now_datetime();
+    state $num = 0;
+    my $count = @_;
+
+    if( $num != $count ){
+	my $msg = 'I have ' . $count . ' todos...';
+	$self->tw->update($msg);
+    }
+    $num = $count;
 }
 
 1;

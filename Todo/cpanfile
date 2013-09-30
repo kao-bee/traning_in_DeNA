@@ -8,4 +8,5 @@ requires 'DateTime::Format::MySQL', '0.04';
 requires 'Task::Plack', '0.28';
 requires 'FindBin', '1.44';
 requires 'Config::Simple', '4.58';
-requires 'DateTime::Format::Strpime', '1.54';
+requires 'DateTime::Format::Strptime', '1.54';
+requires 'Net::Twitter', '4.00007'
