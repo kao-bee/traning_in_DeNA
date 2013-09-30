@@ -47,26 +47,6 @@
     </div>
 : }
 
- <div class="form-group preview-area" data-id="" style="display:none">
-    <hr />
-    	 <pre class="todo_text prettyprint linenums:1">
-	 </pre>
-	 <p class="due_disp">due at </p>
-	 <div class="edit-form" id="edit-area" data-id="" style="display:none">
-	      <label>ToDo</label>
-	      <div class="main-textarea">
-			<textarea class="form-control" rows="5" value="<: $todo.text :>"></textarea>
-	      </div>
-	      <div class="form-group due">
-	      	<label>Due</label>
-  		<input class="form-control" value="" />
-   	      </div>
-	 </div>
-	 <button type="button" class="edit btn-primary btn">edit</button>
-	 <button class="save btn-primary btn" type="submit" style="display:none">submit</button>
-	 <button type="reset" class="delete btn">&times</button>
-    </div>
-
 </form>
 
  
@@ -115,6 +95,7 @@ $(function(){
                     $form[0].reset();
                     $("#num-count").text(0);
                     $('#input-success').fadeIn();
+                    window.location = '<: $c.req.uri_for('/') :>';
                 }
                 else {
                     $('#input-validate').fadeIn();
@@ -190,11 +171,14 @@ $(function(){
         if (!isNum) return false;
         var $textArea = $root.find('.main-textarea textarea');
         var $dueArea  = $root.find('.due input');
+        var $viewArea = $root.find('.todo_text');
 
 	var $prevArea = $(this).closest('.preview-area');
+	var $due_dispArea = $root.find('.due_disp');
 	$prevArea.find('.edit-form').hide();
 	$prevArea.find('.edit').show();
-	$prevArea.find('.save').hide();   
+	$prevArea.find('.save').hide(); 
+
 
         var text = $textArea.val();
         var due  = $dueArea.val();
@@ -214,14 +198,16 @@ $(function(){
             // 応答後
             complete: function(xhr, textStatus) {
                 // ボタンを有効化し、再送信を許可
-                $button.attr('disabled', false);
+             //   $button.attr('disabled', false);
             },
 
             //通信成功時の処理
             success: function(result, textStatus, xhr) {
                 var res = result["response"]
                 if (res) {
-	            $root.find('.todo_text').text() = text;
+	            $viewArea.text(text);
+	            var due_disp = "due at " + due;
+	            $due_dispArea.text(due_disp);
 		}
                 else {
                     alert("DBでエラーが発生しました。");
