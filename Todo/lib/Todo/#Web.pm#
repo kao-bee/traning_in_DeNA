@@ -11,6 +11,7 @@ use FindBin;
 use lib "$FindBin::Bin/../../lib";
 use DateTime;
 use Config::Simple;
+use Net::Twitter;
 
 filter 'set_title' => sub {
     my $app = shift;
@@ -44,7 +45,7 @@ post '/add' => sub{
         }
     ]);
     my $row = $self->create_todo(map {$result->valid($_)} qw/text due_at/ );
-   $c->render_json({response => $row});
+    $c->render_json({response => $row});
 };
 
 post '/delete' => sub {
@@ -95,6 +96,8 @@ sub db {
 	$self->{_db};
 }
 
+
+
 sub create_todo {
     my ($self, $text, $due) = @_;
     $text = "" if !defined $text;
@@ -108,8 +111,20 @@ sub create_todo {
     \%{$row->get_columns};
 }
 
+sub tw {
+    my $self = shft;
+    if(!defined($self->{_tw})) {
+	$self->{_db} = Net::Twitter->new({
+	    traits => [qw/OAuth API::REST/],
+	    consumer_key => 'bx0jNOMTDEOewlyoYkzBWA',
+	    consumer_secret => 'RitrZa5vf6EHGpLTiMeuQIjG2Em0lLusEqgx2C8pY',
+	    access_token => 'FuyKcWjm8sbc5NJmjjUQL6GCW',
+	    access_token_secret => 'zM96nOGJ3jI6F0mE6TOFamP1SB8XDlNZRfzEknKp4'});
+    }
+    
+}
 
-sub update_todo {
+    sub update_todo {
     my ($self, $id, $text, $due_at, $done) = @_;
     my $db = $self->db;
     my $update_row_count = $db->update('todos',
